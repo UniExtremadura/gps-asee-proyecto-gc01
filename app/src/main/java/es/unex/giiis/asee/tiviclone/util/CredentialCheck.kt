@@ -2,6 +2,7 @@ package es.unex.giiis.asee.tiviclone.util
 
 class CredentialCheck private constructor() {
 
+    var cod: Int = -1
     var fail: Boolean = false
     var msg: String = ""
     var error: CredentialError = CredentialError.PasswordError
@@ -13,21 +14,26 @@ class CredentialCheck private constructor() {
 
         private val checks = arrayOf(
             CredentialCheck().apply {
+                //TODO usar la API para devolver el cod de usuario
+                cod = 1
                 fail = false
                 msg = "Your credentials are OK"
                 error = CredentialError.Success
             },
             CredentialCheck().apply {
+                cod = -1
                 fail = true
                 msg = "Invalid username"
                 error = CredentialError.UsernameError
             },
             CredentialCheck().apply {
+                cod = -1
                 fail = true
                 msg = "Invalid password"
                 error = CredentialError.PasswordError
             },
             CredentialCheck().apply {
+                cod = -1
                 fail = true
                 msg = "Passwords do not match"
                 error = CredentialError.PasswordError

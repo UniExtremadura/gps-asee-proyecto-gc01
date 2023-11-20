@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -34,16 +35,21 @@ class HomeActivity : AppCompatActivity() {
 
     companion object {
         const val USER_INFO = "USER_INFO"
+        const val USER_COD_INFO = "USER_COD_INFO"
 
         private var my_user:User = User()
+
+        private var userCod:Int = -1
         fun start(
             context: Context,
-            user: User,
+            cod: Int,
         ) {
             val intent = Intent(context, HomeActivity::class.java).apply {
-                putExtra(USER_INFO, user)
+                putExtra(USER_COD_INFO, cod)
             }
-            my_user = user;
+            //my_user = user;
+            userCod = cod;
+            Log.i("API", "el user cod es ${userCod}")
             context.startActivity(intent)
         }
     }
@@ -57,7 +63,7 @@ class HomeActivity : AppCompatActivity() {
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val user = intent.getSerializableExtra(USER_INFO) as User
+        val user = User()
 
         setUpUI(user)
         setUpListeners()

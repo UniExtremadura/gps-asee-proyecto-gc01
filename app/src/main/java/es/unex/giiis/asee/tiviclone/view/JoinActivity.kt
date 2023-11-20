@@ -52,15 +52,15 @@ class JoinActivity : AppCompatActivity() {
                     etRepassword.text.toString()
                 )
                 if (check.fail) notifyInvalidCredentials(check.msg)
-                else navigateBackWithResult(User(etUsername.text.toString(), etPassword.text.toString()))
+                else navigateBackWithResult()
             }
         }
     }
 
-    private fun navigateBackWithResult(user: User) {
+    private fun navigateBackWithResult() {
         val intent = Intent().apply {
-            putExtra(USERNAME,user.name)
-            putExtra(PASS,user.password)
+            putExtra(USERNAME, binding.etUsername.text.toString())
+            putExtra(PASS, binding.etPassword.text.toString())
         }
         setResult(RESULT_OK, intent)
         finish()

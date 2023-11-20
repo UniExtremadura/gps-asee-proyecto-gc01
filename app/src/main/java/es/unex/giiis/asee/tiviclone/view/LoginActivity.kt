@@ -76,7 +76,7 @@ class LoginActivity : AppCompatActivity() {
                 val check = CredentialCheck.login(etUsername.text.toString(), etPassword.text.toString())
 
                 if (check.fail) notifyInvalidCredentials(check.msg)
-                else navigateToHomeActivity(User(etUsername.text.toString(), etPassword.text.toString()), check.msg)
+                else navigateToHomeActivity(check.cod, check.msg)
             }
 
             btRegister.setOnClickListener {
@@ -89,9 +89,9 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun navigateToHomeActivity(user: User, msg: String) {
+    private fun navigateToHomeActivity(cod: Int, msg: String) {
        // Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
-        HomeActivity.start(this, user)
+        HomeActivity.start(this, cod)
     }
 
     private fun navigateToJoin() {
