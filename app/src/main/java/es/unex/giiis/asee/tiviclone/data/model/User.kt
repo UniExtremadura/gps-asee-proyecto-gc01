@@ -1,9 +1,12 @@
 package es.unex.giiis.asee.tiviclone.data.model
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import java.io.Serializable
 
+@Entity
 data class User(
-    val cod: Int = -1,
+    @PrimaryKey(autoGenerate = true) var cod: Int ?,
     val userName: String = "",
     val name: String = "",
     val lastName: String = "",
