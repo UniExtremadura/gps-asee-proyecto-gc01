@@ -16,9 +16,9 @@ interface UserDAO {
     suspend fun findByLogin(first: String, second: String): Int
 
     @Query("SELECT * FROM User")
-    suspend fun getAllUsers(): ArrayList<User>
+    abstract fun getAllUsers(): List<User>
 
     @Insert
-    suspend fun insert(user: User): Int
+    suspend fun insert(user: User): Long
 
 }

@@ -9,7 +9,7 @@ import es.unex.giiis.asee.tiviclone.data.model.User
 @Database(entities = [User::class], version = 1)
 abstract class TotalEmergencyDatabase: RoomDatabase() {
 
-    abstract fun daoUser(): UserDAO
+    abstract fun userDao(): UserDAO
 
     companion object {
         private var INSTANCE: TotalEmergencyDatabase? = null

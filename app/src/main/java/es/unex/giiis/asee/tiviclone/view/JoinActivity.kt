@@ -6,18 +6,22 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import es.unex.giiis.asee.tiviclone.data.database.TotalEmergencyDatabase
 
 import es.unex.giiis.asee.tiviclone.databinding.ActivityJoinBinding
 import es.unex.giiis.asee.tiviclone.data.model.User
 import es.unex.giiis.asee.tiviclone.util.CredentialCheck
+import kotlinx.coroutines.launch
 
 class JoinActivity : AppCompatActivity() {
 
+    private lateinit var db: TotalEmergencyDatabase
     private lateinit var binding: ActivityJoinBinding
 
     companion object {
 
-
+        const val  COD = "JOIN_COD"
         const val USERNAME = "JOIN_USERNAME"
         const val PASS = "JOIN_PASS"
         fun start(
@@ -34,6 +38,9 @@ class JoinActivity : AppCompatActivity() {
         binding = ActivityJoinBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        //database initialization
+        db = TotalEmergencyDatabase.getInstance(applicationContext)!!
+
         //views initialization and listeners
         setUpUI()
         setUpListeners()
@@ -46,21 +53,37 @@ class JoinActivity : AppCompatActivity() {
     private fun setUpListeners() {
         with(binding) {
             btRegister.setOnClickListener {
-                val check = CredentialCheck.join(
-                    etUsername.text.toString(),
-                    etPassword.text.toString(),
-                    etRepassword.text.toString()
-                )
-                if (check.fail) notifyInvalidCredentials(check.msg)
-                else navigateBackWithResult()
+                join()
             }
         }
     }
 
-    private fun navigateBackWithResult() {
+    private fun join() {
+        with(binding) {
+            val check = CredentialCheck.join(
+                etUsername.text.toString(),
+                etPassword.text.toString(),
+                etRepassword.text.toString()
+            )
+            if (check.fail) notifyInvalidCredentials(check.msg) else {
+                lifecycleScope.launch {
+                    val user = User(null, etUsername.text.toString(), etPassword.text.toString())
+                    val cod = db?.userDao()?.insert(user)
+                    navigateBackWithResult (
+                        cod = cod!!,
+                        username = etUsername.text.toString(),
+                        pass = etPassword.text.toString()
+                    )
+                }
+            }
+        }
+    }
+
+    private fun navigateBackWithResult(cod: Long, username: String, pass: String) {
         val intent = Intent().apply {
-            putExtra(USERNAME, binding.etUsername.text.toString())
-            putExtra(PASS, binding.etPassword.text.toString())
+            putExtra(COD, cod)
+            putExtra(USERNAME, username)
+            putExtra(PASS, pass)
         }
         setResult(RESULT_OK, intent)
         finish()

@@ -6,7 +6,7 @@ import java.io.Serializable
 
 @Entity
 data class User(
-    @PrimaryKey(autoGenerate = true) var cod: Int ?,
+    @PrimaryKey(autoGenerate = true) var cod: Long? = null,
     val userName: String = "",
     val name: String = "",
     val lastName: String = "",
