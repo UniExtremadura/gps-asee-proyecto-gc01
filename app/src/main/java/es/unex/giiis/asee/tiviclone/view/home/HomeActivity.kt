@@ -19,11 +19,19 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 
 import es.unex.giiis.asee.tiviclone.R
+import es.unex.giiis.asee.tiviclone.data.database.TotalEmergencyDatabase
 import es.unex.giiis.asee.tiviclone.databinding.ActivityHomeBinding
 import es.unex.giiis.asee.tiviclone.data.model.Show
 import es.unex.giiis.asee.tiviclone.data.model.User
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 class HomeActivity : AppCompatActivity() {
+
+    val scope = CoroutineScope(Job() + Dispatchers.Main)
+    private lateinit var db: TotalEmergencyDatabase
     private lateinit var binding: ActivityHomeBinding
     private lateinit var appBarConfiguration: AppBarConfiguration
 
@@ -39,10 +47,10 @@ class HomeActivity : AppCompatActivity() {
 
         private var my_user:User = User()
 
-        private var userCod:Int = -1
+        private var userCod:Long = -1
         fun start(
             context: Context,
-            cod: Int,
+            cod: Long,
         ) {
             val intent = Intent(context, HomeActivity::class.java).apply {
                 putExtra(USER_COD_INFO, cod)
@@ -63,10 +71,15 @@ class HomeActivity : AppCompatActivity() {
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val user = User()
+        //database initialization
+        db = TotalEmergencyDatabase.getInstance(applicationContext)!!
 
-        setUpUI(user)
-        setUpListeners()
+        scope.launch {
+            my_user = db.userDao().findByCod(userCod)
+
+            setUpUI(my_user)
+            setUpListeners()
+        }
     }
 
     fun setUpUI(user: User) {

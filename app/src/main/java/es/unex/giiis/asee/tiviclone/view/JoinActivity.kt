@@ -67,7 +67,7 @@ class JoinActivity : AppCompatActivity() {
             )
             if (check.fail) notifyInvalidCredentials(check.msg) else {
                 lifecycleScope.launch {
-                    val user = User(null, etUsername.text.toString(), etPassword.text.toString())
+                    val user = User(null, etUsername.text.toString(), userPassword = etPassword.text.toString())
                     val cod = db?.userDao()?.insert(user)
                     navigateBackWithResult (
                         cod = cod!!,

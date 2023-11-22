@@ -10,10 +10,10 @@ import es.unex.giiis.asee.tiviclone.data.model.User
 interface UserDAO {
 
     @Query("SELECT * FROM User WHERE cod = :first LIMIT 1")
-    suspend fun findByCod(first: Int): User
+    suspend fun findByCod(first: Long): User
 
     @Query("SELECT cod FROM User WHERE userName LIKE :first AND userPassword LIKE :second LIMIT 1")
-    suspend fun findByLogin(first: String, second: String): Int
+    suspend fun findByLogin(first: String, second: String): Long
 
     @Query("SELECT * FROM User")
     abstract fun getAllUsers(): List<User>
