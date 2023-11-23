@@ -21,15 +21,16 @@ import androidx.navigation.ui.setupWithNavController
 import es.unex.giiis.asee.tiviclone.R
 import es.unex.giiis.asee.tiviclone.data.database.TotalEmergencyDatabase
 import es.unex.giiis.asee.tiviclone.databinding.ActivityHomeBinding
-import es.unex.giiis.asee.tiviclone.data.model.Show
 import es.unex.giiis.asee.tiviclone.data.model.User
+import es.unex.giiis.asee.tiviclone.data.model.VideoRecord
+
+
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-class HomeActivity : AppCompatActivity() {
-
+class HomeActivity : AppCompatActivity(), RecordRegistryFragment.OnShowClickListener {
     val scope = CoroutineScope(Job() + Dispatchers.Main)
     private lateinit var db: TotalEmergencyDatabase
     private lateinit var binding: ActivityHomeBinding
@@ -87,7 +88,8 @@ class HomeActivity : AppCompatActivity() {
             appBarConfiguration = AppBarConfiguration(
                 setOf(
                     R.id.homeMenuFragment,
-                    R.id.profileFragment
+                    R.id.profileFragment,
+                    R.id.emergencyFragment
                 )
             )
         setSupportActionBar(binding.toolbar)
@@ -95,8 +97,8 @@ class HomeActivity : AppCompatActivity() {
 
         // Hide toolbar and bottom navigation when in detail fragment
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            if ((/*destination.id == R.id.showDetailFragment*/false) ||
-                (/*destination.id == R.id.settingsFragment*/false)){
+            if ((destination.id == R.id.recordRegistryFragment) ||
+                (destination.id == R.id.recordDetail)){
              //   binding.toolbar.visibility = View.GONE
                 binding.toolbar.menu.clear()
                 binding.bottomNavigation.visibility = View.GONE
@@ -147,7 +149,15 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
+    override fun onShowClick(video: VideoRecord){
+        val action = RecordRegistryFragmentDirections.actionShowRecordDetail2(video)
+        navController.navigate(action)
+    }
     /*
+    override fun onShowClick(show: Show) {
+        val action = DiscoverFragmentDirections.actionDiscoverFragmentToShowDetailFragment(show)
+        navController.navigate(action)
+    }
     override fun onShowClick(show: Show) {
         val action = null
         println("a")

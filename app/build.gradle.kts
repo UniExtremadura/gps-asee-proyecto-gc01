@@ -64,8 +64,21 @@ dependencies {
 
     testImplementation("androidx.room:room-testing:$room_version")
 
+    // Room dependencies
+    val room_version = "2.5.0"
+
+    implementation("androidx.room:room-runtime:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+
+    ksp("androidx.room:room-compiler:$room_version")
+
+    implementation("androidx.room:room-ktx:$room_version")
+
+    testImplementation("androidx.room:room-testing:$room_version")
+
     // Navigation Component
     val navVersion = "2.5.3"
+
 
     // Kotlin
     implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")
