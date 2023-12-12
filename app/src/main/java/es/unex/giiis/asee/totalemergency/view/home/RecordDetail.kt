@@ -215,7 +215,7 @@ class RecordDetail : Fragment() {
                 val fdelete = File(path!!)
                 try {
                     //fdelete.delete()
-                    FileUtils.forceDelete(fdelete)
+                    //FileUtils.forceDelete(fdelete)
                     Log.i("DELETE", "Video has been successfully deleted")
                     lifecycleScope.launch {
                         db.videoDAO().deleteFromId(video?.videoId!!)
