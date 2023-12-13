@@ -83,6 +83,21 @@ class RecordDetail : Fragment() {
         }
         return null
     }
+
+    /*
+        fun justGonnaTry(): String? {
+        val projection = arrayOf(MediaStore.Video.Media.DATA)
+        val cursor = context?.contentResolver?.query(uri!!, projection, null, null, null)
+        cursor?.use {
+            Log.i("Cursor", "Trying to fetch the data")
+            if(it.moveToFirst()){
+                val columnIndex = it.getColumnIndexOrThrow(MediaStore.Video.Media.DATA)
+                return it.getString(columnIndex)
+            }
+        }
+        return null
+    }
+    * */
     private fun iterateMediaFiles() {
         val projection = arrayOf(
             MediaStore.Video.Media._ID,
@@ -120,28 +135,31 @@ class RecordDetail : Fragment() {
         }
     }
     fun getRealPath(): String?{
+        val contentResolver = context?.contentResolver?: return null
 
-        val isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
-        if(isKitKat){
-            Log.i("KITKAT", "API SDK is higher than KitKat")
+        if(uri!!.scheme == "content"){
             val docId = DocumentsContract.getDocumentId(uri)
-            val split = docId.split(":")
+            val split = docId.split(":").toTypedArray()
             val type = split[0]
-            Log.i("KITKAT", "API SDK is higher than KitKat")
 
-            var contentUri:Uri? = null
-
-            if("video".equals(type)){
-                contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+            var contentUri : Uri? = null
+            when(type){
+                "video"->contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI
             }
-
             val selection = "_id=?"
-            val selectionArgs = arrayOf<String>(split[1])
+            val selectionArgs = arrayOf(split[1])
 
-            return getDataColumn(selection, selectionArgs)
+            contentUri?.let {
+                contentResolver.query(it, null, selection, selectionArgs, null)?.use { cursor ->
+                    cursor.moveToFirst()
+                    val columnIndex = cursor.getColumnIndex("_data")
+                    return cursor.getString(columnIndex)
+                }
+            }
+        } else if ("file" == uri!!.scheme) {
+            return uri!!.path // For "file" scheme URIs, directly return the path
         }
-        Log.i("TAG", "PASSED KIT KAT")
-        return "AAA"
+        return null
     }
 
     fun getDataColumn(selection: String, selectionArgs: Array<String>) : String?{
@@ -170,9 +188,12 @@ class RecordDetail : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        iterateMediaFiles()
+        //iterateMediaFiles()
         val path = justGonnaTry()
+
         Log.i("PATH", "The path is: ${path}")
+
+
         //var mediaPlayer = MediaPlayer.create(context, uri)
 
         with(binding){
@@ -194,7 +215,7 @@ class RecordDetail : Fragment() {
                 val fdelete = File(path!!)
                 try {
                     //fdelete.delete()
-                    FileUtils.forceDelete(fdelete)
+                    //FileUtils.forceDelete(fdelete)
                     Log.i("DELETE", "Video has been successfully deleted")
                     lifecycleScope.launch {
                         db.videoDAO().deleteFromId(video?.videoId!!)
