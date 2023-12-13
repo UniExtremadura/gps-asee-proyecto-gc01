@@ -45,7 +45,6 @@ class EmergencyFragment : Fragment() {
 
     val scope = CoroutineScope(Job() + Dispatchers.Main)
 
-
     private val responseCamera =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result ->
             if(result.resultCode == RESULT_OK){
