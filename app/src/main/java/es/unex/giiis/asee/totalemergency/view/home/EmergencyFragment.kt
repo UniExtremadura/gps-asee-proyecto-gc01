@@ -5,6 +5,8 @@ import android.app.Activity.RESULT_CANCELED
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.icu.text.SimpleDateFormat
+import android.icu.util.Calendar
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
@@ -51,7 +53,12 @@ class EmergencyFragment : Fragment() {
                 Log.i("VIDEO_RECORD_TAG", "Video is recorded and available at path: ${videoUri}")
 
                 //TODO: Añadir -> Hora, minutos y segundos al momento que fue grabado.
-                val vr = VideoRecord(videoId = null, uri = "$videoUri", userId = (activity as HomeActivity).getUser().cod!!)
+                val calendar: Calendar = Calendar.getInstance()
+                val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+                val dateTime: String = dateFormat.format(calendar.time)
+                Log.i("DATE TIME", "The date is: ${dateTime}")
+
+                val vr = VideoRecord(videoId = null, uri = "$videoUri", userId = (activity as HomeActivity).getUser().cod!!, dateFormat=dateFormat)
                 scope.launch {
                     insertNewVideo(vr)
                 }
@@ -142,6 +149,7 @@ class EmergencyFragment : Fragment() {
 
     }
 
+    /*
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(requestCode == 101){
@@ -163,6 +171,7 @@ class EmergencyFragment : Fragment() {
             }
         }
     }
+    */
 
     private suspend fun insertNewVideo(vr: VideoRecord){
         db.videoDAO().insert(vr)
