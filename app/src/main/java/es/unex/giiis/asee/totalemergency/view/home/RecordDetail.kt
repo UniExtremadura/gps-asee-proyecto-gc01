@@ -83,6 +83,7 @@ class RecordDetail : Fragment() {
         }
         return null
     }
+
     private fun iterateMediaFiles() {
         val projection = arrayOf(
             MediaStore.Video.Media._ID,
@@ -128,6 +129,7 @@ class RecordDetail : Fragment() {
             val split = docId.split(":")
             val type = split[0]
             Log.i("KITKAT", "API SDK is higher than KitKat")
+
 
             var contentUri:Uri? = null
 
