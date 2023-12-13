@@ -8,6 +8,6 @@ import java.io.Serializable
 @Entity
 data class VideoRecord(
     @PrimaryKey(autoGenerate = true) var videoId: Long?,
-    val uri: String = "",
+    val path: String = "",
     val userId: Long
 ) : Serializable

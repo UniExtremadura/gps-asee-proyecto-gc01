@@ -5,6 +5,7 @@ import android.app.Activity.RESULT_CANCELED
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
@@ -47,11 +48,12 @@ class EmergencyFragment : Fragment() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result ->
             if(result.resultCode == RESULT_OK){
                 val videoUri = result.data?.data
+                val path = justGonnaTry(videoUri!!)
 
                 Log.i("VIDEO_RECORD_TAG", "Video is recorded and available at path: ${videoUri}")
 
                 //TODO: Añadir -> Hora, minutos y segundos al momento que fue grabado.
-                val vr = VideoRecord(videoId = null, uri = "$videoUri", userId = (activity as HomeActivity).getUser().cod!!)
+                val vr = VideoRecord(videoId = null, path = "$path", userId = (activity as HomeActivity).getUser().cod!!)
                 scope.launch {
                     insertNewVideo(vr)
                 }
@@ -106,6 +108,19 @@ class EmergencyFragment : Fragment() {
         }
     }
 
+    fun justGonnaTry(uri: Uri): String? {
+        val projection = arrayOf(MediaStore.Video.Media.DATA)
+        val cursor = context?.contentResolver?.query(uri, projection, null, null, null)
+        cursor?.use {
+            Log.i("Cursor", "Trying to fetch the data")
+            if(it.moveToFirst()){
+                val columnIndex = it.getColumnIndexOrThrow(MediaStore.Video.Media.DATA)
+                return it.getString(columnIndex)
+            }
+        }
+        return null
+    }
+
     fun setUpListeners() {
 
         with(binding){
@@ -152,7 +167,7 @@ class EmergencyFragment : Fragment() {
                 Log.i("VIDEO_RECORD_TAG", "Video is recorded and available at path: ${videoUri}")
 
                 //TODO: Añadir -> Hora, minutos y segundos al momento que fue grabado.
-                val vr = VideoRecord(videoId = null, uri = "$videoUri", userId = (activity as HomeActivity).getUser().cod!!)
+                val vr = VideoRecord(videoId = null, path = "$videoUri", userId = (activity as HomeActivity).getUser().cod!!)
                 scope.launch {
                     insertNewVideo(vr)
                 }
