@@ -1,6 +1,5 @@
 package es.unex.giiis.asee.totalmergency.data.model
 
-import android.net.Uri
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.io.Serializable

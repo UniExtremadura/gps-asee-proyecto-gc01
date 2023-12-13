@@ -54,10 +54,10 @@ class EmergencyFragment : Fragment() {
                 Log.i("VIDEO_RECORD_TAG", "Video is recorded and available at uri: ${videoUri}")
                 Log.i("VIDEO_RECORD_TAG", "Video is recorded and available at path: ${path}")
 
-                //TODO: Añadir -> Hora, minutos y segundos al momento que fue grabado.
                 val calendar: Calendar = Calendar.getInstance()
                 val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
                 val dateTime: String = dateFormat.format(calendar.time)
+
                 Log.i("DATE TIME", "The date is: ${dateTime}")
 
                 val vr = VideoRecord(videoId = null, path = "$path", userId = (activity as HomeActivity).getUser().cod!!, date=dateTime)
@@ -70,8 +70,6 @@ class EmergencyFragment : Fragment() {
                 Log.i("VIDEO_RECORD_TAG", "Something bad happened, i guess")
             }
         }
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -163,30 +161,6 @@ class EmergencyFragment : Fragment() {
         }
 
     }
-
-    /*
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode == 101){
-
-            if(resultCode == RESULT_OK){
-                val videoUri = data?.data
-
-                Log.i("VIDEO_RECORD_TAG", "Video is recorded and available at path: ${videoUri}")
-
-                //TODO: Añadir -> Hora, minutos y segundos al momento que fue grabado.
-                val vr = VideoRecord(videoId = null, uri = "$videoUri", userId = (activity as HomeActivity).getUser().cod!!)
-                scope.launch {
-                    insertNewVideo(vr)
-                }
-            }else if(resultCode == RESULT_CANCELED){
-                Log.i("VIDEO_RECORD_TAG", "Video recording is cancelled")
-            }else{
-                Log.i("VIDEO_RECORD_TAG", "Something bad happened, i guess")
-            }
-        }
-    }
-    */
 
     private suspend fun insertNewVideo(vr: VideoRecord){
         db.videoDAO().insert(vr)
