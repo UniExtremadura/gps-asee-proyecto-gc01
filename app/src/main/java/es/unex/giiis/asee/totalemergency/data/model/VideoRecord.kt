@@ -11,5 +11,5 @@ data class VideoRecord(
     @PrimaryKey(autoGenerate = true) var videoId: Long?,
     val uri: String = "",
     val userId: Long,
-    val dateFormat: SimpleDateFormat
+    val date: String
 ) : Serializable

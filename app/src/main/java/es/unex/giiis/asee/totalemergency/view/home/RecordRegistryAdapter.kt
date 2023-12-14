@@ -23,6 +23,7 @@ class RecordRegistryAdapter(
                 objectLayout.setOnClickListener{
                     onClick(video)
                 }
+                dateFiller.text = video.date
                 objectLayout.setOnLongClickListener{
                     onLongClick(video)
                     true

@@ -58,7 +58,7 @@ class EmergencyFragment : Fragment() {
                 val dateTime: String = dateFormat.format(calendar.time)
                 Log.i("DATE TIME", "The date is: ${dateTime}")
 
-                val vr = VideoRecord(videoId = null, uri = "$videoUri", userId = (activity as HomeActivity).getUser().cod!!, dateFormat=dateFormat)
+                val vr = VideoRecord(videoId = null, uri = "$videoUri", userId = (activity as HomeActivity).getUser().cod!!, date=dateTime)
                 scope.launch {
                     insertNewVideo(vr)
                 }
