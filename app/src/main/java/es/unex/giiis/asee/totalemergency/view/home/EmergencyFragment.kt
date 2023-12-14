@@ -45,6 +45,7 @@ class EmergencyFragment : Fragment() {
 
     val scope = CoroutineScope(Job() + Dispatchers.Main)
 
+
     private val responseCamera =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result ->
             if(result.resultCode == RESULT_OK){
@@ -60,7 +61,7 @@ class EmergencyFragment : Fragment() {
 
                 Log.i("DATE TIME", "The date is: ${dateTime}")
 
-                val vr = VideoRecord(videoId = null, path = "$path", userId = (activity as HomeActivity).getUser().cod!!, date=dateTime)
+                val vr = VideoRecord(videoId= null, path= "$path", userId= (activity as HomeActivity).getUser().cod!!, date=dateTime)
                 scope.launch {
                     insertNewVideo(vr)
                 }
