@@ -48,9 +48,10 @@ class EmergencyFragment : Fragment() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result ->
             if(result.resultCode == RESULT_OK){
                 val videoUri = result.data?.data
-                val path = justGonnaTry(videoUri!!)
+                val path = getPath(videoUri!!)
 
-                Log.i("VIDEO_RECORD_TAG", "Video is recorded and available at path: ${videoUri}")
+                Log.i("VIDEO_RECORD_TAG", "Video is recorded and available at uri: ${videoUri}")
+                Log.i("VIDEO_RECORD_TAG", "Video is recorded and available at path: ${path}")
 
                 //TODO: Añadir -> Hora, minutos y segundos al momento que fue grabado.
                 val vr = VideoRecord(videoId = null, path = "$path", userId = (activity as HomeActivity).getUser().cod!!)
@@ -108,7 +109,7 @@ class EmergencyFragment : Fragment() {
         }
     }
 
-    fun justGonnaTry(uri: Uri): String? {
+    fun getPath(uri: Uri): String? {
         val projection = arrayOf(MediaStore.Video.Media.DATA)
         val cursor = context?.contentResolver?.query(uri, projection, null, null, null)
         cursor?.use {
